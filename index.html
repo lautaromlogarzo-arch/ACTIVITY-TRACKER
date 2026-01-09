@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tracker de Desempeño - FSAE & Training</title>
-    
+
     <link rel="icon" type="image/png" href="logo.png">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#d62828">
+    <link rel="apple-touch-icon" href="logo.png">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* ... (El resto del CSS sigue igual que antes) ... */
         :root {
-            --primary: #d62828; /* Rojo estilo FSAE/Racing */
+            --primary: #d62828; 
             --dark: #1e1e1e;
             --light: #f4f4f4;
             --success: #2ecc71;
@@ -22,78 +24,69 @@
 
         body {
             font-family: 'Segoe UI', Roboto, sans-serif;
-            margin: 0;
-            background-color: var(--bg);
-            color: var(--light);
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
+            margin: 0; background-color: var(--bg); color: var(--light);
+            display: flex; flex-direction: column; height: 100vh;
         }
-        
-        /* --- Header --- */
+
         header {
-            background-color: var(--card);
-            padding: 15px;
-            text-align: center;
+            background-color: var(--card); padding: 15px; text-align: center;
             border-bottom: 3px solid var(--primary);
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
-
-        /* Clase opcional si quieres usar la imagen también en el header */
-        .header-logo-img {
-            height: 24px;
-            width: auto;
-        }
-
         h1 { margin: 0; font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* ... (Resto del CSS) ... */
-        /* --- Navegación (Tabs) --- */
         nav { display: flex; background: var(--card); }
         .tab-btn { flex: 1; padding: 15px; background: none; border: none; color: #888; font-weight: bold; cursor: pointer; transition: 0.3s; border-bottom: 2px solid transparent; text-transform: uppercase; font-size: 0.9rem; }
         .tab-btn.active { color: var(--primary); border-bottom: 2px solid var(--primary); background: rgba(214, 40, 40, 0.1); }
         .tab-btn i { margin-right: 8px; }
-        /* --- Contenido --- */
+
         main { flex: 1; overflow-y: auto; padding: 20px; max-width: 600px; width: 100%; margin: 0 auto; box-sizing: border-box; }
         .tab-content { display: none; animation: fadeIn 0.3s; }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        /* --- Estilos Tab: Ingreso --- */
+
+        /* Estilos Ingreso */
         .date-picker-container { text-align: center; margin-bottom: 25px; }
         input[type="date"] { background: var(--card); color: white; border: 1px solid #444; padding: 10px; border-radius: 8px; font-size: 1.1rem; font-family: inherit; }
-        .task-list { display: flex; flex-direction: column; gap: 15px; }
-        .task-item { background: var(--card); padding: 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; transition: transform 0.1s; }
+        
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-item { background: var(--card); padding: 12px 15px; border-radius: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid #333; transition: transform 0.1s; cursor: pointer; }
         .task-item:active { transform: scale(0.98); }
-        .task-label { font-size: 1.1rem; font-weight: 500; }
-        .task-icon { font-size: 1.5rem; margin-right: 15px; width: 30px; text-align: center; }
-        /* Checkbox personalizado */
-        .custom-checkbox { width: 25px; height: 25px; border: 2px solid #555; border-radius: 5px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .task-label { font-size: 1rem; font-weight: 500; display: flex; flex-direction: column; }
+        
+        .task-counter { font-size: 0.75rem; color: #888; margin-top: 2px; font-weight: normal; }
+        .task-counter.completed { color: var(--success); font-weight: bold; }
+        
+        .task-icon { font-size: 1.3rem; margin-right: 15px; width: 25px; text-align: center; }
+        .custom-checkbox { width: 24px; height: 24px; border: 2px solid #555; border-radius: 5px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .custom-checkbox.checked { background-color: var(--success); border-color: var(--success); }
-        .custom-checkbox i { color: white; display: none; font-size: 0.9rem; }
+        .custom-checkbox i { color: white; display: none; font-size: 0.8rem; }
         .custom-checkbox.checked i { display: block; }
-        /* --- Estilos Tab: Desempeño --- */
+
+        /* Estilos Desempeño */
+        .chart-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .chart-btn { background: var(--card); color: #888; border: 1px solid #444; padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.8rem; transition: 0.3s; }
+        .chart-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
         .chart-container { background: var(--card); padding: 15px; border-radius: 12px; height: 300px; position: relative; }
         .stats-summary { display: flex; justify-content: space-around; margin-bottom: 20px; }
         .stat-box { background: var(--card); padding: 10px 20px; border-radius: 8px; text-align: center; border-top: 3px solid var(--primary); }
         .stat-val { font-size: 1.5rem; font-weight: bold; display: block; }
         .stat-lbl { font-size: 0.8rem; color: #aaa; }
-        /* --- Estilos Tab: Historial --- */
+
+        /* Estilos Historial */
         .history-list { list-style: none; padding: 0; }
-        .history-item { background: var(--card); margin-bottom: 10px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #555; }
-        /* Colores segun porcentaje */
+        .history-item { background: var(--card); margin-bottom: 10px; padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #555; cursor: pointer; }
         .score-0 { border-left-color: #555; }
-        .score-33 { border-left-color: #e74c3c; } /* Rojo */
-        .score-66 { border-left-color: #f1c40f; } /* Amarillo */
-        .score-100 { border-left-color: #2ecc71; } /* Verde */
+        .score-20 { border-left-color: #e74c3c; } 
+        .score-40 { border-left-color: #e67e22; } 
+        .score-60 { border-left-color: #f1c40f; } 
+        .score-80 { border-left-color: #3498db; } 
+        .score-100 { border-left-color: #2ecc71; } 
         .hist-date { font-weight: bold; color: #fff; }
         .hist-details { font-size: 0.85rem; color: #aaa; margin-top: 4px; }
         .hist-score { font-weight: bold; font-size: 1.2rem; }
-        /* Utilidades */
-        .hidden { display: none; }
+
         @media (max-width: 480px) {
             .tab-btn span { display: none; }
             .tab-btn i { margin: 0; font-size: 1.2rem; }
@@ -123,48 +116,67 @@
             <div class="date-picker-container">
                 <label style="display:block; margin-bottom:5px; color:#aaa;">Seleccionar Fecha:</label>
                 <input type="date" id="dateInput" onchange="loadDayData()">
-                <div id="todayIndicator" style="margin-top:5px; font-size:0.8rem; color:var(--primary); font-weight:bold; display:none;">
-                    DÍA DE HOY
-                </div>
+                <div id="todayIndicator" style="margin-top:5px; font-size:0.8rem; color:var(--primary); font-weight:bold; display:none;">DÍA DE HOY</div>
             </div>
 
             <div class="task-list">
-                <div class="task-item" onclick="toggleTask('train')">
+                <div class="task-item" onclick="toggleTask('movilidad')">
+                    <div style="display:flex; align-items:center;">
+                        <div class="task-icon" style="color: #f1c40f;"><i class="fa-solid fa-person-walking"></i></div>
+                        <div><span class="task-label">Rutina de Movilidad</span><span id="count-movilidad" class="task-counter">Semana: 0/3</span></div>
+                    </div>
+                    <div class="custom-checkbox" id="check-movilidad"><i class="fa-solid fa-check"></i></div>
+                </div>
+
+                <div class="task-item" onclick="toggleTask('superior')">
                     <div style="display:flex; align-items:center;">
                         <div class="task-icon" style="color: #3498db;"><i class="fa-solid fa-dumbbell"></i></div>
-                        <span class="task-label">Entrenamiento Físico</span>
+                        <div><span class="task-label">Tren Superior</span><span id="count-superior" class="task-counter">Semana: 0/3</span></div>
                     </div>
-                    <div class="custom-checkbox" id="check-train"><i class="fa-solid fa-check"></i></div>
+                    <div class="custom-checkbox" id="check-superior"><i class="fa-solid fa-check"></i></div>
                 </div>
+
+                <div class="task-item" onclick="toggleTask('inferior')">
+                    <div style="display:flex; align-items:center;">
+                        <div class="task-icon" style="color: #9b59b6;"><i class="fa-solid fa-shoe-prints"></i></div>
+                        <div><span class="task-label">Tren Inferior</span><span id="count-inferior" class="task-counter">Semana: 0/2</span></div>
+                    </div>
+                    <div class="custom-checkbox" id="check-inferior"><i class="fa-solid fa-check"></i></div>
+                </div>
+
+                <div class="task-item" onclick="toggleTask('cuello')">
+                    <div style="display:flex; align-items:center;">
+                        <div class="task-icon" style="color: #e67e22;"><i class="fa-solid fa-helmet-safety"></i></div>
+                        <div><span class="task-label">Entreno Cuello</span><span id="count-cuello" class="task-counter">Semana: 0/2</span></div>
+                    </div>
+                    <div class="custom-checkbox" id="check-cuello"><i class="fa-solid fa-check"></i></div>
+                </div>
+
                 <div class="task-item" onclick="toggleTask('fsae')">
                     <div style="display:flex; align-items:center;">
                         <div class="task-icon" style="color: var(--primary);"><i class="fa-solid fa-car-side"></i></div>
-                        <span class="task-label">Proyecto FSAE</span>
+                        <div><span class="task-label">Desarrollo FSAE</span><span id="count-fsae" class="task-counter">Semana: 0/4</span></div>
                     </div>
                     <div class="custom-checkbox" id="check-fsae"><i class="fa-solid fa-check"></i></div>
                 </div>
-                <div class="task-item" onclick="toggleTask('stretch')">
-                    <div style="display:flex; align-items:center;">
-                        <div class="task-icon" style="color: #f1c40f;"><i class="fa-solid fa-person-walking"></i></div>
-                        <span class="task-label">Rutina Estiramiento</span>
-                    </div>
-                    <div class="custom-checkbox" id="check-stretch"><i class="fa-solid fa-check"></i></div>
-                </div>
             </div>
-            <p style="text-align:center; color:#555; margin-top:30px; font-size:0.8rem;">Los datos se guardan automáticamente.</p>
         </div>
 
         <div id="desempeno" class="tab-content">
             <div class="stats-summary">
-                <div class="stat-box"><span class="stat-val" id="totalDays">0</span><span class="stat-lbl">Días Registrados</span></div>
-                <div class="stat-box"><span class="stat-val" id="avgPerf">0%</span><span class="stat-lbl">Promedio Global</span></div>
+                <div class="stat-box"><span class="stat-val" id="currentScore">0%</span><span class="stat-lbl">Esta Semana</span></div>
+                <div class="stat-box"><span class="stat-val" id="goalsMet">0/5</span><span class="stat-lbl">Objetivos Cumplidos</span></div>
             </div>
-            <h3 style="margin-bottom:10px;">Curva de Progreso</h3>
+
+            <div class="chart-controls">
+                <button class="chart-btn active" onclick="setChartMode('weeks')">Semanas</button>
+                <button class="chart-btn" onclick="setChartMode('months')">Año (Meses)</button>
+            </div>
+
+            <h3 style="margin-bottom:10px; text-align:center;" id="chartTitle">Evolución Semanal</h3>
             <div class="chart-container"><canvas id="performanceChart"></canvas></div>
             <div style="margin-top:20px; text-align:center; font-size:0.8rem; color:#aaa;">
-                <i class="fa-solid fa-circle" style="color:#2ecc71"></i> 100% (3/3) &nbsp;
-                <i class="fa-solid fa-circle" style="color:#f1c40f"></i> 66% (2/3) &nbsp;
-                <i class="fa-solid fa-circle" style="color:#e74c3c"></i> 33% (1/3)
+                El gráfico muestra qué porcentaje de los 5 objetivos semanales se cumplió.
             </div>
         </div>
 
@@ -175,13 +187,17 @@
     </main>
 
     <script>
-        // --- CONSTANTES Y ESTADO ---
-        const STORAGE_KEY = 'fsae_tracker_data_v1';
+        // --- CONFIGURACIÓN ---
+        const METAS_SEMANALES = { movilidad: 3, superior: 3, inferior: 2, cuello: 2, fsae: 4 };
+        const STORAGE_KEY = 'fsae_tracker_data_v2';
+        
+        // --- ESTADO ---
         let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
         let currentDateSelected = '';
         let myChart = null;
+        let chartMode = 'weeks'; // 'weeks' or 'months'
 
-        // --- INICIALIZACIÓN ---
+        // --- INICIO ---
         window.onload = function() {
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('dateInput');
@@ -191,85 +207,230 @@
             loadDayData();
         };
 
-        // --- LÓGICA DE TABS ---
+        // --- NAVEGACIÓN ---
         function openTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
             document.getElementById(tabName).classList.add('active');
+            
             const btn = document.querySelector(`button[onclick="openTab('${tabName}')"]`);
             if(btn) btn.classList.add('active');
-            if(tabName === 'desempeno') renderChart();
+
+            if(tabName === 'desempeno') updateChart(); // Llamar a la función principal del gráfico
             if(tabName === 'historial') renderHistory();
         }
 
-        // --- LÓGICA DE DATOS (INPUT) ---
+        // --- LÓGICA DE INGRESO DE DATOS ---
         function loadDayData() {
             const dateInput = document.getElementById('dateInput');
             currentDateSelected = dateInput.value;
             const today = new Date().toISOString().split('T')[0];
+            
             const indicator = document.getElementById('todayIndicator');
-            if(currentDateSelected === today) { indicator.style.display = 'block'; } else { indicator.style.display = 'none'; }
-            if(currentDateSelected > today) { alert("No puedes registrar datos del futuro."); dateInput.value = today; currentDateSelected = today; }
-            const dayData = appData[currentDateSelected] || { train: false, fsae: false, stretch: false };
-            updateCheckboxUI('check-train', dayData.train);
-            updateCheckboxUI('check-fsae', dayData.fsae);
-            updateCheckboxUI('check-stretch', dayData.stretch);
+            indicator.style.display = (currentDateSelected === today) ? 'block' : 'none';
+            
+            if(currentDateSelected > today) { 
+                alert("No puedes registrar datos del futuro."); 
+                dateInput.value = today; 
+                currentDateSelected = today; 
+            }
+
+            const defaultDay = { movilidad: false, superior: false, inferior: false, cuello: false, fsae: false };
+            const dayData = appData[currentDateSelected] || defaultDay;
+            
+            // Actualizar Checkboxes
+            ['movilidad', 'superior', 'inferior', 'cuello', 'fsae'].forEach(task => {
+                updateCheckboxUI('check-' + task, dayData[task]);
+            });
+
+            // Actualizar contadores de la semana
+            updateWeeklyCounters();
         }
 
         function toggleTask(taskName) {
-            const dayData = appData[currentDateSelected] || { train: false, fsae: false, stretch: false };
+            const defaultDay = { movilidad: false, superior: false, inferior: false, cuello: false, fsae: false };
+            const dayData = appData[currentDateSelected] || defaultDay;
+            
             dayData[taskName] = !dayData[taskName];
             appData[currentDateSelected] = dayData;
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+            
             updateCheckboxUI(`check-${taskName}`, dayData[taskName]);
+            updateWeeklyCounters();
         }
 
         function updateCheckboxUI(elementId, isChecked) {
             const el = document.getElementById(elementId);
-            if(isChecked) { el.classList.add('checked'); } else { el.classList.remove('checked'); }
+            if(isChecked) el.classList.add('checked'); else el.classList.remove('checked');
         }
 
-        // --- LÓGICA DE DESEMPEÑO (CHART) ---
-        function calculatePercentage(dayObj) {
-            if(!dayObj) return 0;
-            let count = 0;
-            if(dayObj.train) count++;
-            if(dayObj.fsae) count++;
-            if(dayObj.stretch) count++;
-            if(count === 0) return 0;
-            if(count === 1) return 33;
-            if(count === 2) return 66;
-            if(count === 3) return 100;
-            return 0;
+        // --- LÓGICA DE CÁLCULO SEMANAL ---
+        
+        // Retorna el objeto Date del lunes de la semana de la fecha dada
+        function getMonday(d) {
+            d = new Date(d);
+            // Ajustar a medianoche local para evitar bugs de timezone
+            d.setHours(0,0,0,0);
+            const day = d.getDay();
+            const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
         }
 
-        function renderChart() {
+        // Cuenta cuántos checks hay en la semana de esa fecha
+        function getWeeklyCounts(dateString) {
+            let monday = getMonday(new Date(dateString + "T00:00:00")); // T00... fuerza local time aprox
+            let counts = { movilidad: 0, superior: 0, inferior: 0, cuello: 0, fsae: 0 };
+
+            for (let i = 0; i < 7; i++) {
+                let tempDate = new Date(monday);
+                tempDate.setDate(monday.getDate() + i);
+                let dateStr = tempDate.toISOString().split('T')[0];
+
+                if (appData[dateStr]) {
+                    if(appData[dateStr].movilidad) counts.movilidad++;
+                    if(appData[dateStr].superior) counts.superior++;
+                    if(appData[dateStr].inferior) counts.inferior++;
+                    if(appData[dateStr].cuello) counts.cuello++;
+                    if(appData[dateStr].fsae) counts.fsae++;
+                }
+            }
+            return counts;
+        }
+
+        // Calcula el PUNTAJE (0-100%) de una semana específica basado en METAS CUMPLIDAS
+        function calculateWeeklyScore(dateString) {
+            const counts = getWeeklyCounts(dateString);
+            let goalsMet = 0;
+            const totalGoals = 5;
+
+            if (counts.movilidad >= METAS_SEMANALES.movilidad) goalsMet++;
+            if (counts.superior >= METAS_SEMANALES.superior) goalsMet++;
+            if (counts.inferior >= METAS_SEMANALES.inferior) goalsMet++;
+            if (counts.cuello >= METAS_SEMANALES.cuello) goalsMet++;
+            if (counts.fsae >= METAS_SEMANALES.fsae) goalsMet++;
+
+            return {
+                score: (goalsMet / totalGoals) * 100,
+                met: goalsMet
+            };
+        }
+
+        function updateWeeklyCounters() {
+            const counts = getWeeklyCounts(currentDateSelected);
+            const scoreData = calculateWeeklyScore(currentDateSelected);
+
+            // Actualizar textos en la UI (Ingreso)
+            updateCounterText('count-movilidad', counts.movilidad, METAS_SEMANALES.movilidad);
+            updateCounterText('count-superior', counts.superior, METAS_SEMANALES.superior);
+            updateCounterText('count-inferior', counts.inferior, METAS_SEMANALES.inferior);
+            updateCounterText('count-cuello', counts.cuello, METAS_SEMANALES.cuello);
+            updateCounterText('count-fsae', counts.fsae, METAS_SEMANALES.fsae);
+
+            // Actualizar resumen pestaña desempeño
+            document.getElementById('currentScore').innerText = Math.round(scoreData.score) + "%";
+            document.getElementById('goalsMet').innerText = scoreData.met + "/5";
+        }
+
+        function updateCounterText(elementId, current, target) {
+            const el = document.getElementById(elementId);
+            el.innerText = `Semana: ${current}/${target}`;
+            if (current >= target) {
+                el.classList.add('completed');
+                el.innerHTML += ' <i class="fa-solid fa-star" style="font-size:0.7rem"></i>';
+            } else {
+                el.classList.remove('completed');
+            }
+        }
+
+        // --- GRÁFICOS (NUEVA LÓGICA) ---
+
+        function setChartMode(mode) {
+            chartMode = mode;
+            // Actualizar botones UI
+            const btns = document.querySelectorAll('.chart-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            if(mode === 'weeks') btns[0].classList.add('active');
+            else btns[1].classList.add('active');
+
+            updateChart();
+        }
+
+        function updateChart() {
             const ctx = document.getElementById('performanceChart').getContext('2d');
-            const sortedDates = Object.keys(appData).sort();
-            const dataPoints = sortedDates.map(date => { return calculatePercentage(appData[date]); });
-            const labels = sortedDates.map(date => { const parts = date.split('-'); return `${parts[2]}/${parts[1]}`; });
-            document.getElementById('totalDays').innerText = sortedDates.length;
-            const sum = dataPoints.reduce((a, b) => a + b, 0);
-            const avg = sortedDates.length ? Math.round(sum / sortedDates.length) : 0;
-            document.getElementById('avgPerf').innerText = avg + "%";
+            let labels = [];
+            let dataPoints = [];
+            const today = new Date();
+
+            if (chartMode === 'weeks') {
+                document.getElementById('chartTitle').innerText = "Últimas 12 Semanas";
+                // Generar datos de las últimas 12 semanas
+                for (let i = 11; i >= 0; i--) {
+                    let d = new Date(today);
+                    d.setDate(d.getDate() - (i * 7)); // Retroceder semanas
+                    let monday = getMonday(d);
+                    let dateStr = monday.toISOString().split('T')[0];
+                    
+                    let result = calculateWeeklyScore(dateStr);
+                    dataPoints.push(result.score);
+                    
+                    // Etiqueta bonita (ej: 10/Ene)
+                    labels.push(`${monday.getDate()}/${monday.getMonth()+1}`);
+                }
+            } else {
+                document.getElementById('chartTitle').innerText = "Promedio Mensual (Año Actual)";
+                // Generar datos por mes (Enero a Diciembre)
+                const currentYear = today.getFullYear();
+                const monthNames = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+                
+                for (let m = 0; m < 12; m++) {
+                    // Calcular promedio de todas las semanas que "caen" en este mes
+                    // Simplificación: Iteramos las semanas del año, si el lunes cae en el mes, cuenta.
+                    let sumScore = 0;
+                    let weeksCount = 0;
+                    
+                    // Primer día del mes
+                    let iterDate = new Date(currentYear, m, 1);
+                    while (iterDate.getMonth() === m) {
+                        // Si es lunes, calculamos esa semana
+                        if (iterDate.getDay() === 1) { // 1 = Lunes
+                            let dateStr = iterDate.toISOString().split('T')[0];
+                            sumScore += calculateWeeklyScore(dateStr).score;
+                            weeksCount++;
+                        }
+                        iterDate.setDate(iterDate.getDate() + 1);
+                    }
+                    
+                    // Si no hubo lunes (caso raro o mes futuro sin datos), 0
+                    let avg = weeksCount > 0 ? (sumScore / weeksCount) : 0;
+                    
+                    // Ocultar meses futuros (opcional, pero queda mejor ver 0)
+                    if (m > today.getMonth()) avg = null; // Para que la línea se corte
+
+                    dataPoints.push(avg);
+                    labels.push(monthNames[m]);
+                }
+            }
+
+            // Renderizar Chart.js
             if(myChart) myChart.destroy();
             let gradient = ctx.createLinearGradient(0, 0, 0, 400);
             gradient.addColorStop(0, 'rgba(214, 40, 40, 0.5)');
             gradient.addColorStop(1, 'rgba(214, 40, 40, 0.0)');
+
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Desempeño Diario (%)',
+                        label: '% Cumplimiento',
                         data: dataPoints,
                         borderColor: '#d62828',
                         backgroundColor: gradient,
                         borderWidth: 2,
                         pointBackgroundColor: '#fff',
-                        pointRadius: 4,
                         fill: true,
-                        tension: 0.3
+                        tension: 0.3,
+                        spanGaps: true // Permite saltar meses vacíos
                     }]
                 },
                 options: {
@@ -283,36 +444,42 @@
             });
         }
 
-        // --- LÓGICA DE HISTORIAL ---
+        // --- HISTORIAL (Lógica diaria simple para ver registro) ---
         function renderHistory() {
             const list = document.getElementById('historyList');
             list.innerHTML = '';
             const sortedDates = Object.keys(appData).sort().reverse();
             if(sortedDates.length === 0) { list.innerHTML = '<li style="text-align:center; color:#555;">No hay registros aún.</li>'; return; }
+            
             sortedDates.forEach(date => {
                 const data = appData[date];
-                const score = calculatePercentage(data);
-                const dateObj = new Date(date);
-                const userTimezoneOffset = dateObj.getTimezoneOffset() * 60000;
-                const localDate = new Date(dateObj.getTime() + userTimezoneOffset);
+                // El historial sigue mostrando el día a día para editar
+                let count = 0;
+                if(data.movilidad) count++; if(data.superior) count++; if(data.inferior) count++; if(data.cuello) count++; if(data.fsae) count++;
+                
+                const dateObj = new Date(date + "T00:00:00"); 
                 const options = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-                const dateString = localDate.toLocaleDateString('es-ES', options);
+                const dateString = dateObj.toLocaleDateString('es-ES', options);
+                
                 let detailsHTML = '';
-                if(data.train) detailsHTML += '<i class="fa-solid fa-dumbbell" title="Entrenado"></i> ';
-                if(data.fsae) detailsHTML += '<i class="fa-solid fa-car-side" title="FSAE"></i> ';
-                if(data.stretch) detailsHTML += '<i class="fa-solid fa-person-walking" title="Estirado"></i> ';
-                if(detailsHTML === '') detailsHTML = 'Descanso / Sin actividad';
-                let scoreClass = 'score-0'; let scoreColor = '#555';
-                if(score >= 33) { scoreClass = 'score-33'; scoreColor = '#e74c3c'; }
-                if(score >= 66) { scoreClass = 'score-66'; scoreColor = '#f1c40f'; }
-                if(score >= 100) { scoreClass = 'score-100'; scoreColor = '#2ecc71'; }
+                if(data.movilidad) detailsHTML += '<i class="fa-solid fa-person-walking" style="color:#f1c40f"></i> ';
+                if(data.superior) detailsHTML += '<i class="fa-solid fa-dumbbell" style="color:#3498db"></i> ';
+                if(data.inferior) detailsHTML += '<i class="fa-solid fa-shoe-prints" style="color:#9b59b6"></i> ';
+                if(data.cuello) detailsHTML += '<i class="fa-solid fa-helmet-safety" style="color:#e67e22"></i> ';
+                if(data.fsae) detailsHTML += '<i class="fa-solid fa-car-side" style="color:#d62828"></i> ';
+                if(detailsHTML === '') detailsHTML = 'Descanso';
+                
                 const li = document.createElement('li');
-                li.className = `history-item ${scoreClass}`;
+                li.className = `history-item score-0`; // Color neutro en historial
                 li.onclick = () => { document.getElementById('dateInput').value = date; openTab('ingreso'); loadDayData(); };
-                li.style.cursor = 'pointer';
-                li.innerHTML = `<div><div class="hist-date">${dateString}</div><div class="hist-details">${detailsHTML}</div></div><div class="hist-score" style="color:${scoreColor}">${score}%</div>`;
+                li.innerHTML = `<div><div class="hist-date">${dateString}</div><div class="hist-details">${detailsHTML}</div></div>`;
                 list.appendChild(li);
             });
+        }
+
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
         }
     </script>
 </body>
