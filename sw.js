@@ -1,5 +1,5 @@
-// CAMBIÉ "v1" POR "v2" AQUÍ ABAJO PARA FORZAR LA ACTUALIZACIÓN
-const CACHE_NAME = "fsae-tracker-v2"; 
+// CAMBIÉ A "v3" AQUÍ PARA QUE TU CELULAR SEPA QUE ES UNA ACTUALIZACIÓN GRANDE
+const CACHE_NAME = "fsae-tracker-v3";
 
 const ASSETS_TO_CACHE = [
   "./",
@@ -18,7 +18,7 @@ self.addEventListener("install", (e) => {
   );
 });
 
-// Activar y limpiar versiones viejas (ESTO BORRARÁ LA v1 Y PONDRÁ LA v2)
+// Activar y limpiar versiones viejas (ESTO BORRARÁ LA v2 Y PONDRÁ LA v3)
 self.addEventListener("activate", (e) => {
   e.waitUntil(
     caches.keys().then((keyList) => {
